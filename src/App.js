@@ -35,26 +35,30 @@ function App() {
   }
 
   // play Game needs to have the logic between the content.
-  var countdown;
+  useEffect(()=> {
+    if(initiatedGame){
+        var countdown = setInterval(()=> {
+          setTimer(timer => {
+            const updatedTimer = timer-1;
+            if(timer === 0 ) {
+              setFinished(true)
+              return 60
+            }
+            return updatedTimer
+          })
+      }, 1000)
+      return ()=> clearInterval(countdown)
+    }
+  }, [initiatedGame])
+
   const playGame = () => {
     let newWord = chooseNewWord()
     setWord(newWord)
     setInitiatedGame(true)
     setFinished(false)
-    setTimer(60)
   }
 
-  useEffect(()=> {
-      countdown = setInterval(()=> {
-         console.log(timer)
-         if(timer === 0 ){
-           clearInterval(countdown)
-         } else {
-           let newTimer = timer-1
-           setTimer(newTimer)
-         }
-      },1000)
-  }, [timer])
+ 
 
   const handleChange = (event) => {
     if(usedWords.length === 0) {
@@ -72,6 +76,7 @@ function App() {
     setInitiatedGame(false)
     setTimer(60)
     setFinished(false)
+    setUsedWords([])
   }
 
 
